@@ -149,6 +149,9 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  * v2.0  10/22/2021
  *        - Introduced region-based passability restrictions and allowances
  * 
+ * v2.0.1  8/30/2023
+ *        - This plugin is now free and open source under the MIT license.
+ * 
  * ============================================================================
  * MIT License
  *

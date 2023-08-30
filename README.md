@@ -102,6 +102,9 @@ For more help using the Map Properties plugin, see [Tyruswoo.com](https://www.ty
 **v2.0** - 10/22/2021
 - Introduced region-based passability restrictions and allowances
 
+**v2.0.1** - 8/30/2023
+- This plugin is now free and open source under the [MIT license](https://opensource.org/license/mit/).
+
 > **Remember, only you can build your dreams!**
 >
 > *Tyruswoo*
