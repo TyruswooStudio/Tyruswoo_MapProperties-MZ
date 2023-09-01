@@ -1,8 +1,11 @@
-# Tyruswoo Map Properties for RPG Maker MZ
+## WARNING: This is an older version!
+It lacks the features and improvements of this plugin's later versions.
+To get the latest version for free, visit
+[Tyruswoo.com](https://www.tyruswoo.com).
 
-Region movement restrictions and allowances for the player and events!
+# Tyruswoo Map Properties v1.0.1 for RPG Maker MZ
 
-Also, use switches to control the parallax background and/or music of maps!
+Use switches to control the parallax background and/or music of maps!
 
 ## Plugin commands
 
@@ -55,30 +58,6 @@ Properties of each Background Music Switch:
     * Selected Maps: Choose which maps will have special rules applied
       for this background music alternative.
 
-### Region Restrict All
-A list of region IDs that act as walls. No player or event can pass through,
-unless their "Through" property is on.
-
-### Region Restrict Player
-A list of region IDs that players cannot pass through.
-Events may still pass through, if tiles permit.
-
-### Region Restrict Events
-A list of region IDs that events cannot pass through.
-Players may pass, if tiles permit.
-
-### Region Allow All
-A list of region IDs that players and events may freely pass through,
-even if the contained tiles would not normally be passable.
-
-### Region Allow Player
-A list of region IDs that players can always pass through.
-No passability change for events.
-
-### Region Allow Events
-A list of region IDs that events can freely pass through.
-Players are still subject to normal tile passability in these regions.
-
 ## Example Use Cases
 - Make a different parallax appear in the same map, based on whether a
   certain switch in ON. This can be done by changing the Parallax
@@ -99,11 +78,8 @@ For more help using the Map Properties plugin, see [Tyruswoo.com](https://www.ty
 **v1.0** - 10/9/2020
 - Map Properties released for RPG Maker MZ!
 
-**v2.0** - 10/22/2021
-- Introduced region-based passability restrictions and allowances
-
-**v2.0.1** - 8/30/2023
-- This plugin is now free and open source under the [MIT license](https://opensource.org/license/mit/).
+**v1.0.1** - 8/31/2023
+- This older version of the plugin is now free and open source under the [MIT license](https://opensource.org/license/mit/).
 
 > **Remember, only you can build your dreams!**
 >

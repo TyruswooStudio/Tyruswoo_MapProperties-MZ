@@ -36,15 +36,11 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc v2.0 Toggle map properties with switches. Use regions to restrict/allow movement.
- * @author Tyruswoo and McKathlin
+ * @plugindesc v1.0.1 Allows using switches to control Map Properties, including switchable parallaxes and switchable background music.
+ * @author Tyruswoo
  * @url https://www.tyruswoo.com
  *
  * @help Tyruswoo Map Properties for RPG Maker MZ
- * Current version: 2.0
- * Most recent update: October 22, 2021
- * Overview: Change map parallaxes and BGM during play using switches.
- *           Use regions to restrict or allow movement of events or players.
  * ============================================================================
  * Plugin commands, their arguments, and short explanations:
  *
@@ -102,29 +98,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  *                              maps, or affecting only the selected maps.
  *     > Selected Maps          Choose which maps will have special rules
  *                              applied for this background music alternative.
- * 
- * Region Restrict All          A list of region IDs that act as walls.
- *                              No player or event can pass through,
- *                              unless their "Through" property is on.
- * 
- * Region Restrict Player       A list of region IDs that players cannot
- *                              pass through. Events may still pass through,
- *                              if tiles permit.
- * 
- * Region Restrict Events       A list of region IDs that events cannot pass
- *                              through. Players may pass, if tiles permit.
- * 
- * Region Allow All             A list of region IDs that players and events
- *                              may freely pass through, even if the contained
- *                              tiles would not normally be passable.
- * 
- * Region Allow Player          A list of region IDs that players can always
- *                              pass through. No passability change for events.
- * 
- * Region Allow Events          A list of region IDs that events can freely
- *                              pass through. Players are still subject to
- *                              normal tile passability in these regions.
- * 
  * ============================================================================
  * Example features:
  *  - Make a different parallax appear in the same map, based on whether a
@@ -146,10 +119,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  * v1.0  10/9/2020
  *        - Map Properties released for RPG Maker MZ!
  * 
- * v2.0  10/22/2021
- *        - Introduced region-based passability restrictions and allowances
- * 
- * v2.0.1  8/30/2023
+ * v1.0.1  8/31/2023
  *        - This plugin is now free and open source under the MIT license.
  * 
  * ============================================================================
@@ -193,40 +163,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  * @command load_parallax_position
  * @text Load Parallax Position
  * @desc Loads the saved X and Y of the parallax's scroll position.
- * 
- * @param Region Restrict All
- * @type number[]
- * @default []
- * @desc These Region IDs don't let players or events pass; they act as walls.
- *
- * @param Region Restrict Player
- * @parent Region Restrict All
- * @type number[]
- * @default []
- * @desc These Region IDs don't let players pass through. No change to event movement.
- *
- * @param Region Restrict Events
- * @parent Region Restrict All
- * @type number[]
- * @default []
- * @desc These Region IDs don't let events in. No change in whether players pass.
- *
- * @param Region Allow All
- * @type number[]
- * @default []
- * @desc These Region IDs let players and events pass through their tiles freely.
- *
- * @param Region Allow Player
- * @parent Region Allow All
- * @type number[]
- * @default []
- * @desc These Region IDs let players pass through. No change in whether events pass.
- *
- * @param Region Allow Events
- * @parent Region Allow All
- * @type number[]
- * @default []
- * @desc These Region IDs let events pass through. No change in whether players pass.
  */
 
 /*~struct~parallaxSwitch:
@@ -298,17 +234,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 	Tyruswoo.MapProperties.parameters = PluginManager.parameters(pluginName);
 	Tyruswoo.MapProperties.param = Tyruswoo.MapProperties.param || {};
-
-	Tyruswoo.MapProperties.parseNumberList = function(json) {
-		if (!json) {
-			return [];
-		}
-		var list = JSON.parse(json);
-		for (let i = 0; i < list.length; i++) {
-			list[i] = Number(list[i]);
-		}
-		return list;
-	};
 	
 	// User-Defined Plugin Parameters
 	Tyruswoo.MapProperties.param.parallaxSwitch = Tyruswoo.MapProperties.parameters['Parallax Switch'] ? JSON.parse(Tyruswoo.MapProperties.parameters['Parallax Switch']) : null;
@@ -342,20 +267,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 		};
 	};
 
-	Tyruswoo.MapProperties.param.regionRestrictAll = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Restrict All']);
-	Tyruswoo.MapProperties.param.regionRestrictPlayer = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Restrict Player']);
-	Tyruswoo.MapProperties.param.regionRestrictEvents = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Restrict Events']);
-
-	Tyruswoo.MapProperties.param.regionAllowAll = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Allow All']);
-	Tyruswoo.MapProperties.param.regionAllowPlayer = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Allow Player']);
-	Tyruswoo.MapProperties.param.regionAllowEvents = Tyruswoo.MapProperties.parseNumberList(
-		Tyruswoo.MapProperties.parameters['Region Allow Events']);
-
 	// Variables
 	Tyruswoo.MapProperties._parallaxX = 0;
 	Tyruswoo.MapProperties._parallaxY = 0;
@@ -379,8 +290,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 	//=============================================================================
 	// Game_Map
 	//=============================================================================
-	// Parallax
-	//-----------------------------------------------------------------------------
 	
 	//Replacement method
 	Game_Map.prototype.setupParallax = function() {
@@ -421,10 +330,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 		this._parallaxX = 0;
 		this._parallaxY = 0;
 	};
-
-	//-----------------------------------------------------------------------------
-	// BGM
-	//-----------------------------------------------------------------------------
 	
 	// Replacement method
 	Game_Map.prototype.autoplay = function() {
@@ -467,59 +372,6 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 		if ($dataMap.autoplayBgs) {
 			AudioManager.playBgs($dataMap.bgs);
 		}
-	};
-
-	//=============================================================================
-	// Game_CharacterBase and subclasses
-	//=============================================================================
-	// Region restrict / allow movement
-	//-----------------------------------------------------------------------------
-
-	// Replacement method
-	// Checks region restrictions, in addition to usual passability.
-	Game_CharacterBase.prototype.isMapPassable = function(x, y, d) {
-		const x2 = $gameMap.roundXWithDirection(x, d);
-		const y2 = $gameMap.roundYWithDirection(y, d);
-		const d2 = this.reverseDir(d);
-		const region = $gameMap.regionId(x, y);
-		const destRegion = $gameMap.regionId(x2, y2);
-		return !this.isBlockedByRegion(destRegion) &&
-			(this.passesThroughRegion(region) || $gameMap.isPassable(x, y, d)) &&
-			(this.passesThroughRegion(destRegion) || $gameMap.isPassable(x2, y2, d2));
-	};
-	
-	// New method
-	Game_CharacterBase.prototype.passesThroughRegion = function(regionId) {
-		return Tyruswoo.MapProperties.param.regionAllowAll.includes(regionId);
-	};
-
-	// New method
-	Game_CharacterBase.prototype.isBlockedByRegion = function(regionId) {
-		return Tyruswoo.MapProperties.param.regionRestrictAll.includes(regionId);
-	};
-
-	// Override to new method
-	Game_Event.prototype.passesThroughRegion = function(regionId) {
-		return Game_Character.prototype.passesThroughRegion.call(this, regionId) ||
-			Tyruswoo.MapProperties.param.regionAllowEvents.includes(regionId);
-	};
-
-	// Override to new method
-	Game_Event.prototype.isBlockedByRegion = function(regionId) {
-		return Game_Character.prototype.isBlockedByRegion.call(this, regionId) ||
-			Tyruswoo.MapProperties.param.regionRestrictEvents.includes(regionId);
-	};
-
-	// Override to new method
-	Game_Player.prototype.passesThroughRegion = function(regionId) {
-		return Game_Character.prototype.passesThroughRegion.call(this, regionId) ||
-			Tyruswoo.MapProperties.param.regionAllowPlayer.includes(regionId);
-	};
-
-	// Override to new method
-	Game_Player.prototype.isBlockedByRegion = function(regionId) {
-		return Game_Character.prototype.isBlockedByRegion.call(this, regionId) ||
-			Tyruswoo.MapProperties.param.regionRestrictPlayer.includes(regionId);
 	};
 
 })();
