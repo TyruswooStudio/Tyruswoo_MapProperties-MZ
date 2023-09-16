@@ -36,15 +36,14 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc v2.0 Toggle map properties with switches. Use regions to restrict/allow movement.
+ * @plugindesc v2.0.1 Toggle map properties with switches. Use regions to restrict/allow movement.
  * @author Tyruswoo and McKathlin
  * @url https://www.tyruswoo.com
  *
  * @help Tyruswoo Map Properties for RPG Maker MZ
- * Current version: 2.0
- * Most recent update: October 22, 2021
- * Overview: Change map parallaxes and BGM during play using switches.
- *           Use regions to restrict or allow movement of events or players.
+ * 
+ * Change map parallaxes and BGM during play using switches.
+ * Use regions to restrict or allow movement of events or players.
  * ============================================================================
  * Plugin commands, their arguments, and short explanations:
  *
