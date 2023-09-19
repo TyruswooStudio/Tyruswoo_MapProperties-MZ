@@ -36,7 +36,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc v1.0.1 Allows using switches to control Map Properties, including switchable parallaxes and switchable background music.
+ * @plugindesc MZ v1.0.1 Allows using switches to control Map Properties, including switchable parallaxes and switchable background music.
  * @author Tyruswoo
  * @url https://www.tyruswoo.com
  *
