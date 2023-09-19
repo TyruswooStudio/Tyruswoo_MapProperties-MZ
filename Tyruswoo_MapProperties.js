@@ -36,7 +36,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc v2.0.1 Toggle map properties with switches. Use regions to restrict/allow movement.
+ * @plugindesc MZ v2.0.1 Toggle map properties with switches. Use regions to restrict/allow movement.
  * @author Tyruswoo and McKathlin
  * @url https://www.tyruswoo.com
  *
