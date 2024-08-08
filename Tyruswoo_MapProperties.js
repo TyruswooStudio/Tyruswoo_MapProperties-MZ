@@ -298,15 +298,23 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 	Tyruswoo.MapProperties.parameters = PluginManager.parameters(pluginName);
 	Tyruswoo.MapProperties.param = Tyruswoo.MapProperties.param || {};
 
-	Tyruswoo.MapProperties.parseNumberList = function(json) {
+	Tyruswoo.MapProperties.parseRegionIds = function(json) {
 		if (!json) {
 			return [];
 		}
-		var list = JSON.parse(json);
-		for (let i = 0; i < list.length; i++) {
-			list[i] = Number(list[i]);
+		let inList = JSON.parse(json);
+		let outList = [];
+		for (const item of inList) {
+			let num = Number.parseInt(item);
+			// All region numbers in lists must be positive integers.
+			// Region 0 is the blank region and should have no special rules.
+			if (num <= 0 || Number.isNaN(num)) {
+				console.warn("Ignoring invalid region number: " + item);
+			} else {
+				outList.push(num);
+			}
 		}
-		return list;
+		return outList;
 	};
 	
 	// User-Defined Plugin Parameters
@@ -341,18 +349,18 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 		};
 	};
 
-	Tyruswoo.MapProperties.param.regionRestrictAll = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionRestrictAll = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Restrict All']);
-	Tyruswoo.MapProperties.param.regionRestrictPlayer = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionRestrictPlayer = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Restrict Player']);
-	Tyruswoo.MapProperties.param.regionRestrictEvents = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionRestrictEvents = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Restrict Events']);
 
-	Tyruswoo.MapProperties.param.regionAllowAll = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionAllowAll = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Allow All']);
-	Tyruswoo.MapProperties.param.regionAllowPlayer = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionAllowPlayer = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Allow Player']);
-	Tyruswoo.MapProperties.param.regionAllowEvents = Tyruswoo.MapProperties.parseNumberList(
+	Tyruswoo.MapProperties.param.regionAllowEvents = Tyruswoo.MapProperties.parseRegionIds(
 		Tyruswoo.MapProperties.parameters['Region Allow Events']);
 
 	// Variables
