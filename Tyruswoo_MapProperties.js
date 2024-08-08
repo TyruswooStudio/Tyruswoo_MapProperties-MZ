@@ -137,6 +137,13 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  *    (This is useful if the maps both have a parallax image and both use
  *    Loop Horizontally and/or Loop Vertically with a scroll value greater than
  *    or less than 0.)
+ *  - Make a hidden path. Add a region number to the Region Allow Player list
+ *    in the plugin parameters, and then paint that region anywhere that you
+ *    want to place the hidden paths.
+ *  - Keep NPCs out of the way in a specific area. Find the plugin parameter
+ *    Region Restrict Events, add a region number to its list, and paint that
+ *    region wherever you need to block NPCs from passing while allowing the
+ *    player to pass.
  * ============================================================================
  * For more help using the Map Properties plugin, see Tyruswoo.com.
  * ============================================================================
