@@ -36,7 +36,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc MZ v2.0.1 Toggle map properties with switches. Use regions to restrict/allow movement.
+ * @plugindesc MZ v2.0.2 Toggle map properties with switches. Use regions to restrict/allow movement.
  * @author Tyruswoo and McKathlin
  * @url https://www.tyruswoo.com
  *
@@ -153,11 +153,16 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  *        - Map Properties released for RPG Maker MZ!
  * 
  * v2.0  10/22/2021
- *        - Introduced region-based passability restrictions and allowances
+ *        - Introduced region-based passability restrictions and allowances.
  * 
  * v2.0.1  8/30/2023
  *        - This plugin is now free and open source under the MIT license.
  * 
+ * v2.0.2  8/8/2024
+ *        - Region list plugin parameters now only use positive integers.
+ *          Zero, negative numbers, and other invalid values are ignored.
+ *          This fixes the bug where someone might put a 0 in a list by mistake
+ *          and cause undesired effects in the default empty region.
  * ============================================================================
  * MIT License
  *
