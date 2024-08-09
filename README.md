@@ -119,7 +119,7 @@ v2.0.2  8/8/2024
   and cause undesired effects in the default empty region.
 
 v2.1.0 8/9/2024
-- Made Tyruswoo Map Properties compatible with Tyruswoo Altimit Movement v0.9.1 and up.
+- Made Tyruswoo Map Properties compatible with Tyruswoo Altimit Movement v0.9.2 and up.
 - Game_Map's isPassable function now checks Region Restrict All and Region Allow All lists.
   This may make region-based passability apply more consistently in some edge cases.
 
