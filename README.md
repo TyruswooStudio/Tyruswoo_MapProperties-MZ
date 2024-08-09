@@ -81,7 +81,7 @@ Players are still subject to normal tile passability in these regions.
 
 ## Example Use Cases
 - Make a different parallax appear in the same map, based on whether a
-  certain switch in ON. This can be done by changing the Parallax
+  certain switch is ON. This can be done by changing the Parallax
   Alternative plugin parameter.
 - Keep the same parallax scrolling position even when transferring between
   maps! Use the Save Parallax Position plugin command just prior to player
@@ -117,6 +117,11 @@ v2.0.2  8/8/2024
   Zero, negative numbers, and other invalid values are ignored.
   This fixes the bug where someone might put a 0 in a list by mistake
   and cause undesired effects in the default empty region.
+
+v2.1.0 8/9/2024
+- Made Tyruswoo Map Properties compatible with Tyruswoo Altimit Movement v0.9.1 and up.
+- Game_Map's isPassable function now checks Region Restrict All and Region Allow All lists.
+  This may make region-based passability apply more consistently in some edge cases.
 
 > **Remember, only you can build your dreams!**
 >

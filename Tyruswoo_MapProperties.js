@@ -36,7 +36,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 
 /*:
  * @target MZ
- * @plugindesc MZ v2.0.2 Toggle map properties with switches. Use regions to restrict/allow movement.
+ * @plugindesc MZ v2.1.0 Toggle map properties with switches. Use regions to restrict/allow movement.
  * @author Tyruswoo and McKathlin
  * @url https://www.tyruswoo.com
  *
@@ -127,7 +127,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  * ============================================================================
  * Example features:
  *  - Make a different parallax appear in the same map, based on whether a
- *    certain switch in On. This can be done by changing the Parallax
+ *    certain switch is On. This can be done by changing the Parallax
  *    Alternative plugin parameter.
  *  - Keep the same parallax scrolling position even when transferring between
  *    maps! Use the Save Parallax Position plugin command just prior to player
@@ -163,6 +163,13 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  *          Zero, negative numbers, and other invalid values are ignored.
  *          This fixes the bug where someone might put a 0 in a list by mistake
  *          and cause undesired effects in the default empty region.
+ * 
+ * v2.1.0  8/9/2024
+ *        - Made Tyruswoo Map Properties compatible with Tyruswoo Altimit
+ *          Movement v0.9.1 and up.
+ *        - Game_Map's isPassable function now checks Region Restrict All and
+ *          Region Allow All lists. This may make region-based passability
+ *          apply more consistently in some edge cases.
  * ============================================================================
  * MIT License
  *
@@ -305,7 +312,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  */
 
 (() => {
-    const pluginName = "Tyruswoo_MapProperties";
+	const pluginName = "Tyruswoo_MapProperties";
 
 	Tyruswoo.MapProperties.parameters = PluginManager.parameters(pluginName);
 	Tyruswoo.MapProperties.param = Tyruswoo.MapProperties.param || {};
@@ -488,25 +495,98 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
 		}
 	};
 
+	//-----------------------------------------------------------------------------
+	// Region Passability Checks
+	//-----------------------------------------------------------------------------
+	
+	Game_Map.prototype.isTilePassable = Game_Map.prototype.isPassable;
+
+	// Applies RegionRestrictAll and RegionAllowAll to ALL passability checks.
+	Game_Map.prototype.isPassable = function(x, y, d) {
+		const region = this.regionId(x, y);
+		if (Tyruswoo.MapProperties.param.regionRestrictAll.includes(region)) {
+			return false;
+		} else if (Tyruswoo.MapProperties.param.regionAllowAll.includes(region)) {
+			return true;
+		} else {
+			return this.isTilePassable(x, y, d);
+		}
+	};
+
+	// Call this wherever a map-based player passability check is needed.
+	Game_Map.prototype.isPlayerPassable = function(x, y, d) {
+		const region = this.regionId(x, y);
+		if (Tyruswoo.MapProperties.param.regionRestrictPlayer.includes(region)) {
+			return false;
+		} else if (Tyruswoo.MapProperties.param.regionAllowPlayer.includes(region)) {
+			return true;
+		} else {
+			return this.isPassable(x, y, d);
+		}
+	};
+
+	// Call this wherever a map-based event passability check is needed.
+	Game_Map.prototype.isEventPassable = function(x, y, d) {
+		const region = this.regionId(x, y);
+		if (Tyruswoo.MapProperties.param.regionRestrictEvents.includes(region)) {
+			return false;
+		} else if (Tyruswoo.MapProperties.param.regionAllowEvents.includes(region)) {
+			return true;
+		} else {
+			return this.isPassable(x, y, d);
+		}
+	};
+
 	//=============================================================================
 	// Game_CharacterBase and subclasses
 	//=============================================================================
 	// Region restrict / allow movement
 	//-----------------------------------------------------------------------------
 
-	// Replacement method
-	// Checks region restrictions, in addition to usual passability.
-	Game_CharacterBase.prototype.isMapPassable = function(x, y, d) {
+	// Alias method
+	Tyruswoo.MapProperties.Game_Player_isMapPassable =
+		Game_Player.prototype.isMapPassable;
+	Game_Player.prototype.isMapPassable = function(x, y, d) {
+		if (this.vehicle()) {
+			// Region restrict/allow doesn't affect players in vehicles.
+			return Tyruswoo.MapProperties.Game_Player_isMapPassable.call(
+				this, x, y, d);
+		}
+		const isNormallyPassable =
+			Tyruswoo.MapProperties.Game_Player_isMapPassable.call(this, x, y, d);
+		return this.isRegionPassable(x, y, d, isNormallyPassable);
+	};
+
+	// Alias method
+	Tyruswoo.MapProperties.Game_Event_isMapPassable =
+		Game_Event.prototype.isMapPassable;
+	Game_Event.prototype.isMapPassable = function(x, y, d) {
+		const isNormallyPassable =
+			Tyruswoo.MapProperties.Game_Event_isMapPassable.call(this, x, y, d);
+		return this.isRegionPassable(x, y, d, isNormallyPassable);
+	};
+
+	// New method
+	Game_CharacterBase.prototype.isRegionPassable =
+	function(x, y, d, isNormallyPassable) {
 		const x2 = $gameMap.roundXWithDirection(x, d);
 		const y2 = $gameMap.roundYWithDirection(y, d);
-		const d2 = this.reverseDir(d);
-		const region = $gameMap.regionId(x, y);
-		const destRegion = $gameMap.regionId(x2, y2);
-		return !this.isBlockedByRegion(destRegion) &&
-			(this.passesThroughRegion(region) || $gameMap.isPassable(x, y, d)) &&
-			(this.passesThroughRegion(destRegion) || $gameMap.isPassable(x2, y2, d2));
+		const nextRegion = $gameMap.regionId(x2, y2);
+		if (isNormallyPassable) {
+			// This passes unless it's region-blocked.
+			return !this.isBlockedByRegion(nextRegion);
+		} else {
+			// This isn't normally passable. Check if regions allow.
+			const myRegion = $gameMap.regionId(x, y);
+			const d2 = this.reverseDir(d);
+			const myTilePasses = this.passesThroughRegion(myRegion) ||
+				$gameMap.isPassable(x, y, d);
+			const nextRegionPasses = this.passesThroughRegion(nextRegion) ||
+				$gameMap.isPassable(x2, y2, d2);
+			return myTilePasses && nextRegionPasses;
+		}
 	};
-	
+
 	// New method
 	Game_CharacterBase.prototype.passesThroughRegion = function(regionId) {
 		return Tyruswoo.MapProperties.param.regionAllowAll.includes(regionId);
