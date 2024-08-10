@@ -166,7 +166,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  * 
  * v2.1.0  8/9/2024
  *        - Made Tyruswoo Map Properties compatible with Tyruswoo Altimit
- *          Movement v0.9.1 and up.
+ *          Movement v0.9.2 and up.
  *        - Game_Map's isPassable function now checks Region Restrict All and
  *          Region Allow All lists. This may make region-based passability
  *          apply more consistently in some edge cases.
