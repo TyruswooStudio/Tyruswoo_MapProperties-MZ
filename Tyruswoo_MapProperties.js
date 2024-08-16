@@ -145,7 +145,7 @@ Tyruswoo.MapProperties = Tyruswoo.MapProperties || {};
  *    region wherever you need to block NPCs from passing while allowing the
  *    player to pass.
  * ============================================================================
- * For more help using the Map Properties plugin, see Tyruswoo.com.
+ * Visit Tyruswoo.com to ask for help, donate, or browse more of our plugins.
  * ============================================================================
  * Version History:
  *
