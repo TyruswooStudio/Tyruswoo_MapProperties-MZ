@@ -99,7 +99,7 @@ Players are still subject to normal tile passability in these regions.
   region wherever you need to block NPCs from passing while allowing the
   player to pass.
 
-For more help using the Map Properties plugin, see [Tyruswoo.com](https://www.tyruswoo.com).
+### Visit [**Tyruswoo.com**](https://www.tyruswoo.com) to [ask for help](https://www.tyruswoo.com/contact-us/), [donate](https://www.tyruswoo.com/donate/), or browse more of our [plugins](https://www.tyruswoo.com/downloads/rpg-maker-plugin-downloads/).
 
 ## Version History:
 
